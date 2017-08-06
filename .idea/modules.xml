@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/CCLTools.iml" filepath="$PROJECT_DIR$/CCLTools.iml" />
+      <module fileurl="file://$PROJECT_DIR$/EasyListen.iml" filepath="$PROJECT_DIR$/EasyListen.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
