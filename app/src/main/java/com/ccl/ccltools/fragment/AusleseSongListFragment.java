@@ -1,15 +1,25 @@
 package com.ccl.ccltools.fragment;
 
 
+import android.app.ActivityOptions;
+import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 
+import com.ccl.ccltools.MainActivity;
 import com.ccl.ccltools.R;
+import com.ccl.ccltools.SongListActivity;
 import com.ccl.ccltools.adapter.AusleseSongListAdapter;
 import com.ccl.ccltools.asynctask.AusleseSongListTask;
+import com.ccl.ccltools.bean.AusleseSongListBean;
 import com.ccl.ccltools.utils.DataUtils;
+import com.ccl.ccltools.utils.UIUtils;
 import com.github.clans.fab.FloatingActionMenu;
 
 public class AusleseSongListFragment extends BaseFragment {
@@ -23,6 +33,7 @@ public class AusleseSongListFragment extends BaseFragment {
     private com.github.clans.fab.FloatingActionButton mFabXiami;
     private com.github.clans.fab.FloatingActionButton mFabQQ;
     public static int mCurrentDataType = DataUtils.DATA_WANGYI;
+    private boolean mSongListToBack = false;
 
     @Override
     protected int getViewId() {
@@ -53,7 +64,7 @@ public class AusleseSongListFragment extends BaseFragment {
         public void onClick(View v) {
             int id = v.getId();
             int dataType = -1;
-            switch (id){
+            switch (id) {
                 case R.id.fab_wangyi:
                     dataType = DataUtils.DATA_WANGYI;
                     break;
@@ -65,7 +76,7 @@ public class AusleseSongListFragment extends BaseFragment {
                     break;
             }
             mFabMenu.toggle(true);
-            if(dataType != -1 && dataType != mCurrentDataType){
+            if (dataType != -1 && dataType != mCurrentDataType) {
                 mCurrentDataType = dataType;
                 reGetData();
             }
@@ -85,26 +96,49 @@ public class AusleseSongListFragment extends BaseFragment {
         mFabMenu.setOnMenuToggleListener(new FloatingActionMenu.OnMenuToggleListener() {
             @Override
             public void onMenuToggle(boolean opened) {
-                if(opened){
+                if (opened) {
                     mFabMenu.getMenuIconView().setImageResource(R.mipmap.ic_fab_close);
-                }else{
+                } else {
                     mFabMenu.getMenuIconView().setImageResource(R.mipmap.ic_fab_open);
                 }
             }
         });
-
         mFabWangyi.setOnClickListener(mFabItemClick);
         mFabXiami.setOnClickListener(mFabItemClick);
         mFabQQ.setOnClickListener(mFabItemClick);
+
+        mAdapter.setOnItemClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSongListToBack = true;
+                Intent intent = new Intent(getContext(), SongListActivity.class);
+                ImageView iv = (ImageView) ((ViewGroup) ((ViewGroup) v).getChildAt(0)).getChildAt(0);
+                AusleseSongListBean bean = (AusleseSongListBean) iv.getTag(R.id.songlist_img_tag);
+                intent.putExtra("img", bean.imgUrl);
+                intent.putExtra("href", bean.href);
+                intent.putExtra("title", bean.title);
+
+                if (Build.VERSION.SDK_INT >= 21) {
+                    Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(getActivity(), iv, "top").toBundle();
+                    startActivity(intent, bundle);
+                } else {
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        reGetData();
+        if (!mSongListToBack) {
+            reGetData();
+        }else{
+            mSongListToBack = false;
+        }
     }
 
-    private void reGetData(){
+    private void reGetData() {
         mRefreshLayout.setRefreshing(true);
         AusleseSongListTask.LOAD_OFFSET = 0;
         new AusleseSongListTask(mAdapter, this.getContext(), mRefreshLayout).execute(mCurrentDataType);

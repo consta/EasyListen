@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="40dp">
+
+    <TextView
+        android:id="@+id/tv_songlist_data_index"
+        android:layout_width="56dp"
+        android:layout_height="match_parent"
+        android:textColor="#777777"
+        android:textSize="16sp"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/tv_songlist_data_title"
+        android:layout_toRightOf="@id/tv_songlist_data_index"
+        android:textColor="#222222"
+        android:textSize="16sp"
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:layout_height="match_parent" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#cccccc"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@id/tv_songlist_data_index"></View>
+
+</RelativeLayout>

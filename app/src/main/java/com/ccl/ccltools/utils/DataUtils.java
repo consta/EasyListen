@@ -31,8 +31,11 @@ public class DataUtils {
     public static final int DATA_WANGYI = 0;
     public static final int DATA_XIAMI = 1;
     public static final int DATA_QQ = 2;
+    public static String pubKey = "010001";
+    public static String nonce = "0CoJUm6Qyw8W8jud";
+    public static String modulus = "00e0b509f6259df8642dbc35662901477df22677ec152b5ff68ace615bb7b725152b3ab17a876aea8a5aa76d2e417629ec4ee341f56135fccf695280104e0312ecbda92557c93870114af6c9d05c4f7f0c3685b7a46bee255932575cce10b424d813cfe4875d3e82047b97ddef52741d546b8e289dc6935b3ece0462db0a22b8e7";
 
-    public static ArrayList<AusleseSongListBean> getSongListData(int type, int offset) {
+    public static ArrayList<AusleseSongListBean> getSongList(int type, int offset) {
         ArrayList<AusleseSongListBean> data = null;
         switch (type) {
             case DATA_XIAMI:
@@ -43,6 +46,20 @@ public class DataUtils {
                 break;
             default:
                 data = getWangyiSongList(offset);
+                break;
+        }
+        return data;
+    }
+
+    public static ArrayList<AusleseSongListBean> getSongListData(int type, String href) {
+        ArrayList<AusleseSongListBean> data = null;
+        switch (type) {
+            case DATA_XIAMI:
+                break;
+            case DATA_QQ:
+                break;
+            default:
+                data = getWangyiSongListData(href);
                 break;
         }
         return data;
@@ -147,7 +164,7 @@ public class DataUtils {
             String string = response.body().string();
             int dataLen = string.length();
             string = string.substring(18, dataLen - 1);
-            Log.e("DataUtils", "2222 request: "+string);
+            Log.e("DataUtils", "2222 request: " + string);
             ArrayList<AusleseSongListBean> beans = new ArrayList<>();
 //            FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory().getPath()+"/jsondata.json");
 //            fos.write(string.getBytes());
@@ -156,7 +173,7 @@ public class DataUtils {
             JSONObject jsonObject = JSON.parseObject(string);
             JSONArray list = jsonObject.getJSONObject("data").getJSONArray("list");
             int size = list.size();
-            for (int i = 0; i < size; i++){
+            for (int i = 0; i < size; i++) {
                 JSONObject data = list.getJSONObject(i);
                 AusleseSongListBean bean = new AusleseSongListBean(data.getString("dissname"), data.getString("imgurl"), data.getString("dissid"));
                 beans.add(bean);
@@ -167,6 +184,36 @@ public class DataUtils {
         } catch (Exception e) {
             e.printStackTrace();
             Log.e("DataUtils", "55: " + e.toString());
+            return null;
+        }
+    }
+
+    public static ArrayList<AusleseSongListBean> getWangyiSongListData(String hrefId) {
+        Request request = new Request.Builder()
+                .url("http://music.163.com"+hrefId)
+                .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Listen1/1.2.0 Chrome/49.0.2623.75 Electron/1.0.1 Safari/537.36")
+                .build();
+        Log.e("DataUtils", "getWangyiSongListData 11");
+        try {
+            Log.e("DataUtils", "getWangyiSongListData 22");
+            Response response = new OkHttpClient().newCall(request).execute();
+            String string = response.body().string();
+            Document html = Jsoup.parse(string);
+            Elements elementsByTag = html.getElementsByClass("f-hide");
+            ArrayList<AusleseSongListBean> beans = new ArrayList<>();
+            for (Element tag : elementsByTag) {
+                Elements txt = tag.getElementsByTag("a");
+                for (Element data : txt) {
+                    String title = data.ownText();
+                    String href = data.attr("href");
+                beans.add(new AusleseSongListBean(title, null, href));
+                }
+            }
+            Log.e("beans", "beans: " + beans.size());
+            return beans;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("DataUtils", "getWangyiSongListData 55: " + e.toString());
             return null;
         }
     }

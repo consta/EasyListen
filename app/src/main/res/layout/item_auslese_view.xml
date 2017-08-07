@@ -18,6 +18,7 @@
         <ImageView
             android:id="@+id/iv_auslese_img"
             android:layout_width="match_parent"
+            android:transitionName="top"
             android:layout_height="wrap_content"
             android:scaleType="fitXY"
             />
