@@ -1,4 +1,4 @@
-package com.example;
+package com.ccl.ccltools.other;
 
 import java.util.Random;
 
