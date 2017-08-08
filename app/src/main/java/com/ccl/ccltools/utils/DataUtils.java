@@ -1,6 +1,5 @@
 package com.ccl.ccltools.utils;
 
-import android.os.Environment;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
@@ -13,11 +12,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 
-import okhttp3.Headers;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -55,8 +51,10 @@ public class DataUtils {
         ArrayList<AusleseSongListBean> data = null;
         switch (type) {
             case DATA_XIAMI:
+                data = getXiamiSongListData(href);
                 break;
             case DATA_QQ:
+                data = getQQSongListData(href);
                 break;
             default:
                 data = getWangyiSongListData(href);
@@ -214,6 +212,87 @@ public class DataUtils {
         } catch (Exception e) {
             e.printStackTrace();
             Log.e("DataUtils", "getWangyiSongListData 55: " + e.toString());
+            return null;
+        }
+    }
+
+    public static ArrayList<AusleseSongListBean> getXiamiSongListData(String hrefId) {
+        Request request = new Request.Builder()
+//                .url("http://api.xiami.com/web?v=2.0&app_key=1&id="+hrefId+"&callback=jsonp122&r=collect/detail")
+                .url("http://www.xiami.com" + hrefId)
+                .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Listen1/1.2.0 Chrome/49.0.2623.75 Electron/1.0.1 Safari/537.36")
+                .addHeader("Cookie", "_unsign_token=952150b1a1fc5bf061e45a813535d019; _xiamitoken=b0e08dc541ac1dc0b85ed7f85ea7e119")
+                .build();
+        Log.e("DataUtils", "getXiamiSongListData 11");
+        try {
+            Log.e("DataUtils", "getXiamiSongListData 22");
+            Response response = new OkHttpClient().newCall(request).execute();
+            String string = response.body().string();
+            Document parse = Jsoup.parse(string);
+            Log.e("DataUtils", "getXiamiSongListData 33");
+            Elements song_name = parse.getElementsByClass("song_name");
+            Log.e("DataUtils", "getXiamiSongListData 44");
+            ArrayList<AusleseSongListBean> beans = new ArrayList<>();
+            for (Element element : song_name) {
+                String songName = element.toString().split("</a>")[0].split(">")[2];
+
+                Log.e("DataUtils", "getXiamiSongListData 55");
+//                Element element1 = element.getAllElements().get(0);
+//                Element element2 = element.getAllElements().get(0);
+//                Log.e("DataUtils", "55 element1: "+element1.toString());
+//                Log.e("DataUtils", "55 element2: "+element2.toString());
+//                Log.e("DataUtils", "55 element all: "+element.toString());
+
+                AusleseSongListBean bean = new AusleseSongListBean(songName, null, null);
+                beans.add(bean);
+            }
+            Log.e("beans", "beans: " + beans.size());
+            return beans;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("DataUtils", "getXiamiSongListData 55: " + e.toString());
+            return null;
+        }
+    }
+
+    public static ArrayList<AusleseSongListBean> getQQSongListData(String href) {
+//        http://i.y.qq.com/qzone-music/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg?type=1&json=1&utf8=1&onlysong=0&jsonpCallback=jsonCallback&nosign=1&disstid=1471596738&g_tk=5381&loginUin=0&hostUin=0&format=jsonp&inCharset=GB2312&outCharset=utf-8&notice=0&platform=yqq&jsonpCallback=jsonCallback&needNewCode=0
+        Request.Builder builder = new Request.Builder()
+                .url("http://i.y.qq.com/qzone-music/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg?type=1&json=1&utf8=1&onlysong=0&jsonpCallback=jsonCallback&nosign=1&disstid="+href+"&g_tk=5381&loginUin=0&hostUin=0&format=jsonp&inCharset=GB2312&outCharset=utf-8&notice=0&platform=yqq&jsonpCallback=jsonCallback&needNewCode=0")
+                .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Listen1/1.2.0 Chrome/49.0.2623.75 Electron/1.0.1 Safari/537.36");
+        builder.addHeader("Connection", "keep-alive");
+        builder.addHeader("Accept", "application/json, text/plain, */*");
+        builder.addHeader("Accept-Language", "zh-CN");
+        builder.addHeader("Referer", "http://y.qq.com/");
+        builder.addHeader("Host", "i.y.qq.com");
+        Request request = builder.build();
+        Log.e("DataUtils", "11");
+        try {
+            Log.e("DataUtils", "22");
+            Response response = new OkHttpClient().newCall(request).execute();
+            String string = response.body().string();
+            int dataLen = string.length();
+            string = string.substring(13, dataLen - 1);
+            Log.e("DataUtils", "2222 request: " + string);
+            ArrayList<AusleseSongListBean> beans = new ArrayList<>();
+            //            FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory().getPath()+"/jsondata.json");
+            //            fos.write(string.getBytes());
+            //            fos.flush();
+            //            fos.close();
+            JSONObject jsonObject = JSON.parseObject(string);
+            JSONArray list = jsonObject.getJSONArray("cdlist").getJSONObject(0).getJSONArray("songlist");
+            int size = list.size();
+            for (int i = 0; i < size; i++) {
+                JSONObject data = list.getJSONObject(i);
+                AusleseSongListBean bean = new AusleseSongListBean(data.getString("songname"), null, null);
+                beans.add(bean);
+            }
+            Log.e("DataUtils", "3333");
+            Log.e("beans", "beans: " + beans.size());
+            return beans;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("DataUtils", "55: " + e.toString());
             return null;
         }
     }

@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.ccl.ccltools.adapter.AusleseSongListAdapter;
 import com.ccl.ccltools.bean.AusleseSongListBean;
+import com.ccl.ccltools.fragment.AusleseSongListFragment;
 import com.ccl.ccltools.utils.DataUtils;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class AusleseSongListTask extends AsyncTask<Integer, Void, List<AusleseSo
 
     @Override
     protected List<AusleseSongListBean> doInBackground(Integer... params) {
-        if(params != null && params.length > 0){
+        if (params != null && params.length > 0) {
             mCurrentDataType = params[0];
         }
         ArrayList<AusleseSongListBean> ausleseSongList = DataUtils.getSongList(mCurrentDataType, LOAD_OFFSET);
@@ -46,19 +47,22 @@ public class AusleseSongListTask extends AsyncTask<Integer, Void, List<AusleseSo
     @Override
     protected void onPostExecute(List<AusleseSongListBean> list) {
         super.onPostExecute(list);
-        if (mRefreshView != null) {
-            mRefreshView.setRefreshing(false);
-        }
-        if (list != null && list.size() > 0) {
-            if (LOAD_OFFSET == 0) {
-                mAdapter.setDatas(list);
-            }else{
-                mAdapter.addDatas(list);
+        if (mCurrentDataType == AusleseSongListFragment.mCurrentDataType) {
+
+            if (mRefreshView != null) {
+                mRefreshView.setRefreshing(false);
             }
-            LOAD_OFFSET++;
-            mAdapter.notifyDataSetChanged();
-        } else {
-            Toast.makeText(mContext, "加载失败", Toast.LENGTH_SHORT).show();
+            if (list != null && list.size() > 0) {
+                if (LOAD_OFFSET == 0) {
+                    mAdapter.setDatas(list);
+                } else {
+                    mAdapter.addDatas(list);
+                }
+                LOAD_OFFSET++;
+                mAdapter.notifyDataSetChanged();
+            } else {
+                Toast.makeText(mContext, "加载失败", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }
