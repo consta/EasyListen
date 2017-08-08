@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.ccl.ccltools.adapter.AusleseSongListAdapter;
 import com.ccl.ccltools.adapter.SongListDataAdapter;
 import com.ccl.ccltools.bean.AusleseSongListBean;
+import com.ccl.ccltools.bean.SongBean;
 import com.ccl.ccltools.utils.DataUtils;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import java.util.List;
  * Created by wang on 2017/8/6.
  */
 
-public class SongListDataTask extends AsyncTask<Void, Void, List<AusleseSongListBean>> {
+public class SongListDataTask extends AsyncTask<Void, Void, List<SongBean>> {
     private SongListDataAdapter mAdapter;
     private Context mContext;
     private int mType;
@@ -37,13 +38,13 @@ public class SongListDataTask extends AsyncTask<Void, Void, List<AusleseSongList
     }
 
     @Override
-    protected List<AusleseSongListBean> doInBackground(Void... params) {
-        ArrayList<AusleseSongListBean> ausleseSongList = DataUtils.getSongListData(mType, mHref);
+    protected List<SongBean> doInBackground(Void... params) {
+        ArrayList<SongBean> ausleseSongList = DataUtils.getSongListData(mType, mHref);
         return ausleseSongList;
     }
 
     @Override
-    protected void onPostExecute(List<AusleseSongListBean> list) {
+    protected void onPostExecute(List<SongBean> list) {
         super.onPostExecute(list);
         if (list != null && list.size() > 0) {
             mAdapter.setDatas(list);

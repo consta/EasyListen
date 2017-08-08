@@ -1,21 +1,14 @@
 package com.ccl.ccltools.adapter;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ccl.ccltools.R;
-import com.ccl.ccltools.asynctask.AusleseSongListTask;
-import com.ccl.ccltools.bean.AusleseSongListBean;
-import com.ccl.ccltools.fragment.AusleseSongListFragment;
-import com.ccl.ccltools.other.GlideApp;
-import com.ccl.ccltools.utils.UIUtils;
+import com.ccl.ccltools.bean.SongBean;
 
 import java.util.List;
 
@@ -23,14 +16,14 @@ import java.util.List;
 public class SongListDataAdapter extends RecyclerView.Adapter<SongListDataAdapter.MyViewHolder> {
 
     private Context mContext;
-    private List<AusleseSongListBean> mDatas;
+    private List<SongBean> mDatas;
     private View.OnClickListener mOnItemClickListener;
 
     public SongListDataAdapter(Context context) {
         mContext = context;
     }
 
-    public void setDatas(List<AusleseSongListBean> data){
+    public void setDatas(List<SongBean> data){
         mDatas = data;
     }
 
@@ -42,9 +35,9 @@ public class SongListDataAdapter extends RecyclerView.Adapter<SongListDataAdapte
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        AusleseSongListBean ausleseSongListBean = mDatas.get(position);
+        SongBean bean = mDatas.get(position);
         holder.index.setText((position+1)+"");
-        holder.title.setText(ausleseSongListBean.title);
+        holder.title.setText(bean.songName);
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ccl.ccltools.bean.AusleseSongListBean;
+import com.ccl.ccltools.bean.SongBean;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -47,8 +48,8 @@ public class DataUtils {
         return data;
     }
 
-    public static ArrayList<AusleseSongListBean> getSongListData(int type, String href) {
-        ArrayList<AusleseSongListBean> data = null;
+    public static ArrayList<SongBean> getSongListData(int type, String href) {
+        ArrayList<SongBean> data = null;
         switch (type) {
             case DATA_XIAMI:
                 data = getXiamiSongListData(href);
@@ -186,7 +187,7 @@ public class DataUtils {
         }
     }
 
-    public static ArrayList<AusleseSongListBean> getWangyiSongListData(String hrefId) {
+    public static ArrayList<SongBean> getWangyiSongListData(String hrefId) {
         Request request = new Request.Builder()
                 .url("http://music.163.com"+hrefId)
                 .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Listen1/1.2.0 Chrome/49.0.2623.75 Electron/1.0.1 Safari/537.36")
@@ -198,13 +199,13 @@ public class DataUtils {
             String string = response.body().string();
             Document html = Jsoup.parse(string);
             Elements elementsByTag = html.getElementsByClass("f-hide");
-            ArrayList<AusleseSongListBean> beans = new ArrayList<>();
+            ArrayList<SongBean> beans = new ArrayList<>();
             for (Element tag : elementsByTag) {
                 Elements txt = tag.getElementsByTag("a");
                 for (Element data : txt) {
                     String title = data.ownText();
                     String href = data.attr("href");
-                beans.add(new AusleseSongListBean(title, null, href));
+                beans.add(new SongBean(null, null, title, null));
                 }
             }
             Log.e("beans", "beans: " + beans.size());
@@ -216,7 +217,7 @@ public class DataUtils {
         }
     }
 
-    public static ArrayList<AusleseSongListBean> getXiamiSongListData(String hrefId) {
+    public static ArrayList<SongBean> getXiamiSongListData(String hrefId) {
         Request request = new Request.Builder()
 //                .url("http://api.xiami.com/web?v=2.0&app_key=1&id="+hrefId+"&callback=jsonp122&r=collect/detail")
                 .url("http://www.xiami.com" + hrefId)
@@ -232,7 +233,7 @@ public class DataUtils {
             Log.e("DataUtils", "getXiamiSongListData 33");
             Elements song_name = parse.getElementsByClass("song_name");
             Log.e("DataUtils", "getXiamiSongListData 44");
-            ArrayList<AusleseSongListBean> beans = new ArrayList<>();
+            ArrayList<SongBean> beans = new ArrayList<>();
             for (Element element : song_name) {
                 String songName = element.toString().split("</a>")[0].split(">")[2];
 
@@ -243,7 +244,7 @@ public class DataUtils {
 //                Log.e("DataUtils", "55 element2: "+element2.toString());
 //                Log.e("DataUtils", "55 element all: "+element.toString());
 
-                AusleseSongListBean bean = new AusleseSongListBean(songName, null, null);
+                SongBean bean = new SongBean(null, null, songName, null);
                 beans.add(bean);
             }
             Log.e("beans", "beans: " + beans.size());
@@ -255,7 +256,7 @@ public class DataUtils {
         }
     }
 
-    public static ArrayList<AusleseSongListBean> getQQSongListData(String href) {
+    public static ArrayList<SongBean> getQQSongListData(String href) {
 //        http://i.y.qq.com/qzone-music/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg?type=1&json=1&utf8=1&onlysong=0&jsonpCallback=jsonCallback&nosign=1&disstid=1471596738&g_tk=5381&loginUin=0&hostUin=0&format=jsonp&inCharset=GB2312&outCharset=utf-8&notice=0&platform=yqq&jsonpCallback=jsonCallback&needNewCode=0
         Request.Builder builder = new Request.Builder()
                 .url("http://i.y.qq.com/qzone-music/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg?type=1&json=1&utf8=1&onlysong=0&jsonpCallback=jsonCallback&nosign=1&disstid="+href+"&g_tk=5381&loginUin=0&hostUin=0&format=jsonp&inCharset=GB2312&outCharset=utf-8&notice=0&platform=yqq&jsonpCallback=jsonCallback&needNewCode=0")
@@ -274,7 +275,7 @@ public class DataUtils {
             int dataLen = string.length();
             string = string.substring(13, dataLen - 1);
             Log.e("DataUtils", "2222 request: " + string);
-            ArrayList<AusleseSongListBean> beans = new ArrayList<>();
+            ArrayList<SongBean> beans = new ArrayList<>();
             //            FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory().getPath()+"/jsondata.json");
             //            fos.write(string.getBytes());
             //            fos.flush();
@@ -284,7 +285,7 @@ public class DataUtils {
             int size = list.size();
             for (int i = 0; i < size; i++) {
                 JSONObject data = list.getJSONObject(i);
-                AusleseSongListBean bean = new AusleseSongListBean(data.getString("songname"), null, null);
+                SongBean bean = new SongBean(null, null, data.getString("songname"), null);
                 beans.add(bean);
             }
             Log.e("DataUtils", "3333");
