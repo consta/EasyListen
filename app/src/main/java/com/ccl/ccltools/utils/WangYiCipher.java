@@ -1,4 +1,8 @@
-package com.example;
+package com.ccl.ccltools.utils;
+
+
+import android.util.Base64;
+import android.util.Log;
 
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -10,26 +14,36 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import sun.misc.BASE64Encoder;
-
-public class MyClass {
-
+public class WangYiCipher {
     public static String pubKey = "010001";
     public static String nonce = "0CoJUm6Qyw8W8jud";
     public static String modulus = "00e0b509f6259df8642dbc35662901477df22677ec152b5ff68ace615bb7b725152b3ab17a876aea8a5aa76d2e417629ec4ee341f56135fccf695280104e0312ecbda92557c93870114af6c9d05c4f7f0c3685b7a46bee255932575cce10b424d813cfe4875d3e82047b97ddef52741d546b8e289dc6935b3ece0462db0a22b8e7";
 
 
-    public static void main(String[] args) {
-        //        String sKey = creatScrectKey(16);
-        String sKey = "97e99d97ddf04954";
-
-        //        String text = "{\"br\": 12800,\"csrf_token\": \"csrf\",\"ids\": [35331568]}";
-        String text = "{\"csrf_token\": \"\", \"ids\": [35331568], \"br\": 12800}";
+    /*public static String aesEncrytion(int id){
+        String sKey = creatScrectKey(16);
+        String text = "{\"br\": 12800,\"csrf_token\": \"csrf\",\"ids\": ["+id+"]}";
         String aes = aesEnscrect(aesEnscrect(text, nonce), sKey);
-        System.out.println("\r\n\r\n\r\n");
-        System.out.println("result: " + aes);
+        Pattern p = Pattern.compile("\\s*|\t|\r|\n");
+        Matcher m = p.matcher(aes);
+        String res = m.replaceAll("");
+        Log.e("Cipher", "aes: "+res);
+        return res;
+    }*/
 
-        String aa = new StringBuilder(sKey).reverse().toString();
+    public static String aesEncrytion(int id, String key){
+//        String text = "{\"br\": 12800,\"csrf_token\": \"csrf\",\"ids\": ["+id+"]}";
+        String text = "{\"csrf_token\": \"\", \"ids\": [35331568], \"br\": 12800}";
+        String aes = aesEnscrect(aesEnscrect(text, nonce), key);
+        Pattern p = Pattern.compile("\\s*|\t|\r|\n");
+        Matcher m = p.matcher(aes);
+        String res = m.replaceAll("");
+        Log.e("Cipher", "aes: "+res);
+        return res;
+    }
+
+    public static String rsaEncrytion(String key){
+        String aa = new StringBuilder(key).reverse().toString();
         String str = "";
         System.out.println("str: " + aa);
         for (int i = 0; i < aa.length(); i++) {
@@ -40,19 +54,21 @@ public class MyClass {
         System.out.println("aa: " + str);
 
         BigInteger rsa1 = new BigInteger(str, 16);
-        System.out.println("aaaa: " + rsa1.toString());
+        System.out.println("rsa1: " + rsa1.toString());
 
-
-        BigInteger rsa2 = new BigInteger(pubKey, 16);
-        System.out.println("aaaaaaa: " + rsa2.toString());
+//        BigInteger rsa2 = new BigInteger(pubKey, 16);
+//        System.out.println("rsa2: " + rsa2.toString());
 
         BigInteger rsa3 = new BigInteger(modulus, 16);
-        System.out.println("aaaaaaa: " + rsa3.toString());
+        System.out.println("rsa3: " + rsa3.toString());
 
-        BigInteger pow = rsa1.pow(0x010001).mod(rsa3);
+        BigInteger powMod = rsa1.pow(0x010001).mod(rsa3);
 
-        System.out.println("aaaaaaa: " + pow.toString(16));
+        String result = powMod.toString(16);
+        Log.e("Cipher", "result: "+result);
+        return result;
     }
+
 
     public static String aesEnscrect(String text, String key) {
         System.out.println("text: " + text);
@@ -98,7 +114,7 @@ public class MyClass {
                     bytes = null;
                 }
             } while (bytes != null);
-            String encode = new BASE64Encoder().encode(result);
+            String encode = Base64.encodeToString(result, Base64.DEFAULT);
             Pattern p = Pattern.compile("\\s*|\t|\r|\n");
             Matcher m = p.matcher(encode);
             encode = m.replaceAll("");
@@ -108,6 +124,12 @@ public class MyClass {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static byte[] concat(byte[] first, byte[] second) {
+        byte[] result = Arrays.copyOf(first, first.length + second.length);
+        System.arraycopy(second, 0, result, first.length, second.length);
+        return result;
     }
 
     public static String toPrint(byte[] var0) {
@@ -135,12 +157,6 @@ public class MyClass {
         }
     }
 
-    public static byte[] concat(byte[] first, byte[] second) {
-        byte[] result = Arrays.copyOf(first, first.length + second.length);
-        System.arraycopy(second, 0, result, first.length, second.length);
-        return result;
-    }
-
     public static String creatScrectKey(int size) {
         Random random = new Random();
         byte[] kebytes = new byte[size];
@@ -149,8 +165,9 @@ public class MyClass {
         for (byte b : kebytes) {
             fString += Integer.toHexString(0xff & b);
         }
-        System.out.println("creatScrectKey String: " + fString.substring(0, 16));
+        Log.e("Cipher", "creatScrectKey String: " + fString.substring(0, 16));
         return fString.substring(0, 16);
     }
+
 
 }

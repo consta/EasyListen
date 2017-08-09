@@ -15,6 +15,8 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 
+import okhttp3.FormBody;
+import okhttp3.Headers;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -205,7 +207,7 @@ public class DataUtils {
                 for (Element data : txt) {
                     String title = data.ownText();
                     String href = data.attr("href");
-                beans.add(new SongBean(null, null, title, null));
+                beans.add(new SongBean(null, null, title, href));
                 }
             }
             Log.e("beans", "beans: " + beans.size());
@@ -256,6 +258,7 @@ public class DataUtils {
         }
     }
 
+
     public static ArrayList<SongBean> getQQSongListData(String href) {
 //        http://i.y.qq.com/qzone-music/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg?type=1&json=1&utf8=1&onlysong=0&jsonpCallback=jsonCallback&nosign=1&disstid=1471596738&g_tk=5381&loginUin=0&hostUin=0&format=jsonp&inCharset=GB2312&outCharset=utf-8&notice=0&platform=yqq&jsonpCallback=jsonCallback&needNewCode=0
         Request.Builder builder = new Request.Builder()
@@ -294,6 +297,58 @@ public class DataUtils {
         } catch (Exception e) {
             e.printStackTrace();
             Log.e("DataUtils", "55: " + e.toString());
+            return null;
+        }
+    }
+
+
+    private static String params = "yWcaWylSo1sWq%2FX8cUs7eL4vXPNBKpVhwC0jqajDJbgJll%2Fac5GSmBMpgJ60Dm8H783geAEqZErBozy92zdXtyGX6r7fyyp61szZYXO5LehQOkHbKwc4s3PNjpFBr%2B7F";
+    private static String encseckey = "432e43f072b700ade7cd8388de9dd377d01a62a421d2a6a6bc21de89bf89020eb397359e96af2db82d103904b013eaf044f1734411350bc5e538a6188c043e1e4d3223ae7fe755ccd90ced770c18a5597702441e38ecf29f241182f93b722aa981699c0ca4c7753e276abc7230311133f9e30e0f894e540d136f042e660dbab5";
+
+    public static ArrayList<SongBean> getWangyiSongData(int hrefId) {
+//        'params': aes,
+//        'encSecKey': rsa
+        String s2 = WangYiCipher.creatScrectKey(16);
+        FormBody body = new FormBody.Builder()
+                .add("params", WangYiCipher.aesEncrytion(hrefId, s2))
+                .add("encSecKey", WangYiCipher.rsaEncrytion(s2))
+//                .add("params", params)
+//                .add("encSecKey", encseckey)
+                .build();
+        Request request = new Request.Builder()
+                .url("http://music.163.com/weapi/song/enhance/player/url?csrf_token=")
+                .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Listen1/1.2.0 Chrome/49.0.2623.75 Electron/1.0.1 Safari/537.36")
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .post(body)
+                .build();
+        Log.e("DataUtils", "getWangyiSongListData 11");
+        try {
+            Log.e("DataUtils", "getWangyiSongListData 22");
+            Response response = new OkHttpClient().newCall(request).execute();
+            String s = response.toString();
+            Log.e("DataUtils", "getWangyiSongListData response: "+s);
+            Headers headers = response.headers();
+            String s1 = headers.toString();
+            Log.e("DataUtils", "getWangyiSongListData headers: "+s1);
+            String string = response.body().string();
+            Log.e("DataUtils", "getWangyiSongListData Song: "+string);
+//            Document html = Jsoup.parse(string);
+//            Elements elementsByTag = html.getElementsByClass("f-hide");
+//            ArrayList<SongBean> beans = new ArrayList<>();
+//            for (Element tag : elementsByTag) {
+//                Elements txt = tag.getElementsByTag("a");
+//                for (Element data : txt) {
+//                    String title = data.ownText();
+//                    String href = data.attr("href");
+//                    beans.add(new SongBean(null, null, title, href));
+//                }
+//            }
+//            Log.e("beans", "beans: " + beans.size());
+//            return beans;
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("DataUtils", "getWangyiSongListData 55: " + e.toString());
             return null;
         }
     }

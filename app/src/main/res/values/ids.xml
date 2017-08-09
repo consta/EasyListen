@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item type="id" name="songlist_img_tag"></item>
+    <item type="id" name="songdata_tag"></item>
 </resources>

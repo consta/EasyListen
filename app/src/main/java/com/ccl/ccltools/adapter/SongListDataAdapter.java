@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.ccl.ccltools.R;
 import com.ccl.ccltools.bean.SongBean;
+import com.ccl.ccltools.utils.DataUtils;
 
 import java.util.List;
 
@@ -38,6 +39,7 @@ public class SongListDataAdapter extends RecyclerView.Adapter<SongListDataAdapte
         SongBean bean = mDatas.get(position);
         holder.index.setText((position+1)+"");
         holder.title.setText(bean.songName);
+        holder.title.setTag(R.id.songdata_tag, Integer.parseInt(bean.songId.split("id=")[1]));
     }
 
     @Override
@@ -60,10 +62,23 @@ public class SongListDataAdapter extends RecyclerView.Adapter<SongListDataAdapte
         public MyViewHolder(View view)
         {
             super(view);
-            view.setOnClickListener(mOnItemClickListener);
             title = (TextView) view.findViewById(R.id.tv_songlist_data_title);
             index = (TextView) view.findViewById(R.id.tv_songlist_data_index);
+            title.setOnClickListener(mOnClickListener);
         }
 
     }
+
+    private View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            final int tag = (int) v.getTag(R.id.songdata_tag);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    DataUtils.getWangyiSongData(tag);
+                }
+            }).start();
+        }
+    };
 }

@@ -32,18 +32,18 @@ public class AusleseSongListAdapter extends RecyclerView.Adapter<AusleseSongList
         mContext = context;
         Resources resources = mContext.getResources();
         DisplayMetrics dm = resources.getDisplayMetrics();
-        mItemHeight = dm.widthPixels/2 - UIUtils.dp2px(12);
+        mItemHeight = dm.widthPixels / 2 - UIUtils.dp2px(12);
     }
 
-    public void setDatas(List<AusleseSongListBean> data){
+    public void setDatas(List<AusleseSongListBean> data) {
         mDatas = data;
         mLoading = false;
     }
 
-    public void addDatas(List<AusleseSongListBean> data){
-        if(mDatas != null){
+    public void addDatas(List<AusleseSongListBean> data) {
+        if (mDatas != null) {
             mDatas.addAll(data);
-        }else{
+        } else {
             mDatas = data;
         }
         mLoading = false;
@@ -65,7 +65,7 @@ public class AusleseSongListAdapter extends RecyclerView.Adapter<AusleseSongList
                 .placeholder(R.mipmap.loading_spinner)
                 .into(holder.img);
 
-        if(!mLoading && position >= mDatas.size() - 10){
+        if (!mLoading && position >= mDatas.size() - 10) {
             mLoading = true;
             new AusleseSongListTask(this, mContext, null).execute(AusleseSongListFragment.mCurrentDataType);
         }
@@ -73,23 +73,21 @@ public class AusleseSongListAdapter extends RecyclerView.Adapter<AusleseSongList
 
     @Override
     public int getItemCount() {
-        if(mDatas != null){
+        if (mDatas != null) {
             return mDatas.size();
         }
         return 0;
     }
 
-    public void setOnItemClickListener(View.OnClickListener l){
+    public void setOnItemClickListener(View.OnClickListener l) {
         mOnItemClickListener = l;
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder
-    {
+    class MyViewHolder extends RecyclerView.ViewHolder {
         TextView title;
         ImageView img;
 
-        public MyViewHolder(View view)
-        {
+        public MyViewHolder(View view) {
             super(view);
             view.setOnClickListener(mOnItemClickListener);
             title = (TextView) view.findViewById(R.id.tv_auslese_title);

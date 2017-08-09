@@ -1,6 +1,8 @@
 package com.ccl.ccltools.bean;
 
 
+import android.util.Log;
+
 public class SongBean {
     public String singerName;
     public String singerId;
@@ -12,5 +14,16 @@ public class SongBean {
         this.singerId = singerId;
         this.songName = songName;
         this.songId = songId;
+        Log.e("SongBean", "SongBean: "+toString());
+    }
+
+    @Override
+    public String toString() {
+        return "SongBean{" +
+                "singerName='" + singerName + '\'' +
+                ", singerId='" + singerId + '\'' +
+                ", songName='" + songName + '\'' +
+                ", songId='" + songId + '\'' +
+                '}';
     }
 }
