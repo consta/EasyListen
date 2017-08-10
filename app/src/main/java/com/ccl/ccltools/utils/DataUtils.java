@@ -224,7 +224,7 @@ public class DataUtils {
 //                .url("http://api.xiami.com/web?v=2.0&app_key=1&id="+hrefId+"&callback=jsonp122&r=collect/detail")
                 .url("http://www.xiami.com" + hrefId)
                 .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Listen1/1.2.0 Chrome/49.0.2623.75 Electron/1.0.1 Safari/537.36")
-                .addHeader("Cookie", "_unsign_token=952150b1a1fc5bf061e45a813535d019; _xiamitoken=b0e08dc541ac1dc0b85ed7f85ea7e119")
+//                .addHeader("Cookie", "_unsign_token=952150b1a1fc5bf061e45a813535d019; _xiamitoken=b0e08dc541ac1dc0b85ed7f85ea7e119")
                 .build();
         Log.e("DataUtils", "getXiamiSongListData 11");
         try {
@@ -302,13 +302,11 @@ public class DataUtils {
     }
 
 
-    private static String params = "yWcaWylSo1sWq%2FX8cUs7eL4vXPNBKpVhwC0jqajDJbgJll%2Fac5GSmBMpgJ60Dm8H783geAEqZErBozy92zdXtyGX6r7fyyp61szZYXO5LehQOkHbKwc4s3PNjpFBr%2B7F";
-    private static String encseckey = "432e43f072b700ade7cd8388de9dd377d01a62a421d2a6a6bc21de89bf89020eb397359e96af2db82d103904b013eaf044f1734411350bc5e538a6188c043e1e4d3223ae7fe755ccd90ced770c18a5597702441e38ecf29f241182f93b722aa981699c0ca4c7753e276abc7230311133f9e30e0f894e540d136f042e660dbab5";
-
     public static ArrayList<SongBean> getWangyiSongData(int hrefId) {
 //        'params': aes,
 //        'encSecKey': rsa
         String s2 = WangYiCipher.creatScrectKey(16);
+//        String s2 = "597c67dd956c869c";
         FormBody body = new FormBody.Builder()
                 .add("params", WangYiCipher.aesEncrytion(hrefId, s2))
                 .add("encSecKey", WangYiCipher.rsaEncrytion(s2))

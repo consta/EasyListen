@@ -32,8 +32,8 @@ public class WangYiCipher {
     }*/
 
     public static String aesEncrytion(int id, String key){
-//        String text = "{\"br\": 12800,\"csrf_token\": \"csrf\",\"ids\": ["+id+"]}";
-        String text = "{\"csrf_token\": \"\", \"ids\": [35331568], \"br\": 12800}";
+//        String text = "{\"csrf_token\": \"\", \"ids\": [35331568], \"br\": 12800}";
+        String text = "{\"csrf_token\": \"\", \"ids\": ["+id+"], \"br\": 12800}";
         String aes = aesEnscrect(aesEnscrect(text, nonce), key);
         Pattern p = Pattern.compile("\\s*|\t|\r|\n");
         Matcher m = p.matcher(aes);
@@ -56,15 +56,29 @@ public class WangYiCipher {
         BigInteger rsa1 = new BigInteger(str, 16);
         System.out.println("rsa1: " + rsa1.toString());
 
-//        BigInteger rsa2 = new BigInteger(pubKey, 16);
-//        System.out.println("rsa2: " + rsa2.toString());
+        BigInteger rsa2 = new BigInteger(pubKey, 16);
+        System.out.println("rsa2: " + rsa2.toString());
 
         BigInteger rsa3 = new BigInteger(modulus, 16);
         System.out.println("rsa3: " + rsa3.toString());
 
-        BigInteger powMod = rsa1.pow(0x010001).mod(rsa3);
-
+//        BigInteger powMod = rsa1.pow(0x010001).mod(rsa3);
+        BigInteger powMod = rsa1.modPow(rsa2, rsa3);
+        System.out.println("rsa3: result");
         String result = powMod.toString(16);
+        Log.e("Cipher", "result: "+result);
+        int length = result.length();
+        Log.e("Cipher", "result length: "+length);
+        if(length < 256){
+            int diff = 256 - length;
+            String diffString = "";
+            for (int i = 0; i < diff; i++) {
+                diffString += "0";
+            }
+            result = diffString +result;
+        }else if(length > 256){
+            result = result.substring(0, 256);
+        }
         Log.e("Cipher", "result: "+result);
         return result;
     }
