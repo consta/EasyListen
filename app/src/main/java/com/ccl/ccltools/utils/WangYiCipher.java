@@ -31,7 +31,7 @@ public class WangYiCipher {
         return res;
     }*/
 
-    public static String aesEncrytion(int id, String key){
+    public static String aesEncrytion(String id, String key){
 //        String text = "{\"csrf_token\": \"\", \"ids\": [35331568], \"br\": 12800}";
         String text = "{\"csrf_token\": \"\", \"ids\": ["+id+"], \"br\": 12800}";
         String aes = aesEnscrect(aesEnscrect(text, nonce), key);
@@ -62,7 +62,6 @@ public class WangYiCipher {
         BigInteger rsa3 = new BigInteger(modulus, 16);
         System.out.println("rsa3: " + rsa3.toString());
 
-//        BigInteger powMod = rsa1.pow(0x010001).mod(rsa3);
         BigInteger powMod = rsa1.modPow(rsa2, rsa3);
         System.out.println("rsa3: result");
         String result = powMod.toString(16);

@@ -1,6 +1,8 @@
 package com.example;
 
 import java.math.BigInteger;
+import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -18,8 +20,11 @@ public class MyClass {
     public static String nonce = "0CoJUm6Qyw8W8jud";
     public static String modulus = "00e0b509f6259df8642dbc35662901477df22677ec152b5ff68ace615bb7b725152b3ab17a876aea8a5aa76d2e417629ec4ee341f56135fccf695280104e0312ecbda92557c93870114af6c9d05c4f7f0c3685b7a46bee255932575cce10b424d813cfe4875d3e82047b97ddef52741d546b8e289dc6935b3ece0462db0a22b8e7";
 
-
     public static void main(String[] args) {
+        parseXianiSongUrl("8h2.c5%%22ph7513655EtFao%22_93_dE%64EE-t%lm2FF13%keb5792%np2i%F33153ecaE1d95u%Fc22391_Fy2792-3El3odF238%la%5ab318-lAmn29345.u3dc5858%%5.9517EmtD%b2b%%5");
+    }
+
+    public static void main2(String[] args) {
         //        String sKey = creatScrectKey(16);
         String sKey = "97e99d97ddf04954";
 
@@ -151,6 +156,67 @@ public class MyClass {
         }
         System.out.println("creatScrectKey String: " + fString.substring(0, 16));
         return fString.substring(0, 16);
+    }
+
+    public static void parseXianiSongUrl(String data) {
+        int num = Integer.parseInt(String.valueOf(data.charAt(0)));
+        int reNum = data.length() - 1;
+        int avgLen = reNum / num;
+        int remainder = reNum % num;
+
+        //    result = [location[i * (avg_len + 1) + 1: (i + 1) * (avg_len + 1) + 1] for i in range(remainder)]
+        ArrayList<String> result = new ArrayList();
+        for (int i = 0; i < remainder; i++) {
+            String substring = data.substring(i * (avgLen + 1) + 1, (i + 1) * (avgLen + 1) + 1);
+            if (substring != null) {
+                result.add(substring);
+            }
+        }
+
+        //     [location[(avg_len + 1) * remainder:][i * avg_len + 1: (i + 1) * avg_len + 1] for i in range(num - remainder)]
+        int diff = num - remainder;
+        if (diff > 0) {
+            ArrayList<String> result2 = new ArrayList();
+            for (int i = 0; i < diff; i++) {
+                String substring = data.substring((avgLen + 1) * remainder, data.length()).substring(i * avgLen + 1, (i + 1) * avgLen + 1);
+                if (substring != null) {
+                    result2.add(substring);
+                }
+            }
+            result.addAll(result2);
+        }
+
+        System.out.println("resut:  " + result.toString());
+
+        if (result != null && result.size() > 0) {
+            //        ''.join([''.join([result[j][i] for j in range(num)])for i in range(avg_len)])
+            String without = "";
+            for (int i = 0; i < avgLen; i++) {
+                char[] inner = new char[num];
+                for (int j = 0; j < num; j++) {
+                    inner[j] = result.get(j).charAt(i);
+                }
+                System.out.println("inner " + i + ": " + String.valueOf(inner));
+                without += String.valueOf(inner);
+            }
+            //            ''.join([result[r][-1] for r in range(remainder)])
+            char[] lastChars = new char[remainder];
+            for (int i = 0; i < remainder; i++) {
+                lastChars[i] = result.get(i).charAt(result.get(i).length() - 1);
+            }
+            System.out.println("last: " +String.valueOf(lastChars));
+            try {
+                String finalData = without + String.valueOf(lastChars);
+                finalData = finalData.replaceAll("%(?![0-9a-fA-F]{2})", "%25");
+                finalData = finalData.replaceAll("\\+", "%2B");
+                String encode = URLDecoder.decode(finalData, "UTF-8").replace('^', '0');
+                System.out.println("encode: " + encode);
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("Exception: " + e.toString());
+            }
+        }
+
     }
 
 }

@@ -9,29 +9,23 @@ import urllib2
 
 from replay import h
 
-
 logger = logging.getLogger('listenone.' + __name__)
 
 
 # https://github.com/Flowerowl/xiami
 def caesar(location):
+    location = '8h2.c5%%22ph7513655EtFao%22_93_dE%64EE-t%lm2FF13%keb5792%np2i%F33153ecaE1d95u%Fc22391_Fy2792-3El3odF238%la%5ab318-lAmn29345.u3dc5858%%5.9517EmtD%b2b%%5'
+    print "location[0]: %s" % location[0]
     num = int(location[0])
+    print "num: %d" % num
     avg_len = int(len(location[1:]) / num)
     remainder = int(len(location[1:]) % num)
-    result = [
-        location[i * (avg_len + 1) + 1: (i + 1) * (avg_len + 1) + 1]
-        for i in range(remainder)]
-    result.extend(
-        [
-            location[(avg_len + 1) * remainder:]
-            [i * avg_len + 1: (i + 1) * avg_len + 1]
-            for i in range(num - remainder)])
-    url = urllib.unquote(
-        ''.join([
-            ''.join([result[j][i] for j in range(num)])
-            for i in range(avg_len)
-        ]) +
-        ''.join([result[r][-1] for r in range(remainder)])).replace('^', '0')
+
+    result = [location[i * (avg_len + 1) + 1: (i + 1) * (avg_len + 1) + 1] for i in range(remainder)]
+    print result
+    result.extend([location[(avg_len + 1) * remainder:][i * avg_len + 1: (i + 1) * avg_len + 1] for i in range(num - remainder)])
+    print result
+    url = urllib.unquote(''.join([''.join([result[j][i] for j in range(num)])for i in range(avg_len)]) + ''.join([result[r][-1] for r in range(remainder)])).replace('^', '0')
     return url
 
 
@@ -52,8 +46,8 @@ def _xm_h(url, v=None):
         'Host': 'api.xiami.com',
         'Referer': 'http://m.xiami.com/',
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2)' +
-        ' AppleWebKit/537.36 (KHTML, like Gecko) Chrome' +
-        '/33.0.1750.152 Safari/537.36',
+                      ' AppleWebKit/537.36 (KHTML, like Gecko) Chrome' +
+                      '/33.0.1750.152 Safari/537.36',
     }
     return h(url, v=v, extra_headers=extra_headers)
 
@@ -97,8 +91,8 @@ def search_track(keyword):
     '''
     keyword = urllib2.quote(keyword.encode("utf8"))
     search_url = 'http://api.xiami.com/web?v=2.0&app_key=1&key=' + keyword \
-        + '&page=1&limit=50&_ksTS=1459930568781_153&callback=jsonp154' + \
-        '&r=search/songs'
+                 + '&page=1&limit=50&_ksTS=1459930568781_153&callback=jsonp154' + \
+                 '&r=search/songs'
     response = _xm_h(search_url)
     json_string = response[len('jsonp154('):-len(')')]
     data = json.loads(json_string)
@@ -110,7 +104,7 @@ def search_track(keyword):
 
 def list_playlist():
     url = 'http://api.xiami.com/web?v=2.0&app_key=1&_ksTS=1459927525542_91' + \
-        '&page=1&limit=60&callback=jsonp92&r=collect/recommend'
+          '&page=1&limit=60&callback=jsonp92&r=collect/recommend'
     resonpse = _xm_h(url)
     data = json.loads(resonpse[len('jsonp92('):-len(')')])
     result = []
@@ -119,14 +113,14 @@ def list_playlist():
             cover_img_url=l['logo'],
             title=l['collect_name'],
             play_count=0,
-            list_id='xmplaylist_' + str(l['list_id']),)
+            list_id='xmplaylist_' + str(l['list_id']), )
         result.append(d)
     return result
 
 
 def get_playlist(playlist_id):
     url = 'http://api.xiami.com/web?v=2.0&app_key=1&id=%s' % playlist_id + \
-        '&_ksTS=1459928471147_121&callback=jsonp122&r=collect/detail'
+          '&_ksTS=1459928471147_121&callback=jsonp122&r=collect/detail'
     resonpse = _xm_h(url)
     data = json.loads(resonpse[len('jsonp122('):-len(')')])
 
@@ -142,8 +136,8 @@ def get_playlist(playlist_id):
 
 def get_artist(artist_id):
     url = 'http://api.xiami.com/web?v=2.0&app_key=1&id=%s' % str(artist_id) + \
-        '&page=1&limit=20&_ksTS=1459931285956_216' + \
-        '&callback=jsonp217&r=artist/detail'
+          '&page=1&limit=20&_ksTS=1459931285956_216' + \
+          '&callback=jsonp217&r=artist/detail'
     resonpse = _xm_h(url)
     data = json.loads(resonpse[len('jsonp217('):-len(')')])
     artist_name = data['data']['artist_name']
@@ -153,8 +147,8 @@ def get_artist(artist_id):
         id='xmartist_' + artist_id)
 
     url = 'http://api.xiami.com/web?v=2.0&app_key=1&id=%s' % str(artist_id) + \
-        '&page=1&limit=20&_ksTS=1459931285956_216' + \
-        '&callback=jsonp217&r=artist/hot-songs'
+          '&page=1&limit=20&_ksTS=1459931285956_216' + \
+          '&callback=jsonp217&r=artist/hot-songs'
     resonpse = _xm_h(url)
     data = json.loads(resonpse[len('jsonp217('):-len(')')])
     result = []
@@ -178,8 +172,8 @@ def get_artist(artist_id):
 
 def get_album(album_id):
     url = 'http://api.xiami.com/web?v=2.0&app_key=1&id=%s' % str(album_id) + \
-        '&page=1&limit=20&_ksTS=1459931285956_216' + \
-        '&callback=jsonp217&r=album/detail'
+          '&page=1&limit=20&_ksTS=1459931285956_216' + \
+          '&callback=jsonp217&r=album/detail'
     resonpse = _xm_h(url)
     data = json.loads(resonpse[len('jsonp217('):-len(')')])
     artist_name = data['data']['artist_name']
@@ -207,9 +201,15 @@ def get_album(album_id):
 
 
 def get_url_by_id(song_id):
-    url = 'http://www.xiami.com/song/playlist/id/%s' % song_id + \
-        '/object_name/default/object_id/0/cat/json'
+    # url = 'http://www.xiami.com/song/playlist/id/%s' % song_id + \
+    url = 'http://www.xiami.com/song/playlist/id/398472' + \
+          '/object_name/default/object_id/0/cat/json'
     response = h(url)
     secret = json.loads(response)['data']['trackList'][0]['location']
+    print secret
     url = caesar(secret)
+    print "url: %s" % url
     return url
+
+
+get_url_by_id(0)
