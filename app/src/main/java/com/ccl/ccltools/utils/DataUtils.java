@@ -74,7 +74,7 @@ public class DataUtils {
                 data = getXiamiSongData(href);
                 break;
             case DATA_QQ:
-                //                data = getQQSongData(href);
+                data = getQQSongData(href);
                 break;
             default:
                 data = getWangyiSongData(href);
@@ -257,7 +257,7 @@ public class DataUtils {
                 String songId = element.child(0).child(0).attr("value");
                 String songName = element.getElementsByClass("song_name").get(0).toString().split("</a>")[0].split(">")[2];
 
-                Log.e("DataUtils", "getXiamiSongListData 55 songId: "+songId);
+                Log.e("DataUtils", "getXiamiSongListData 55 songId: " + songId);
                 //                Element element1 = element.getAllElements().get(0);
                 //                Element element2 = element.getAllElements().get(0);
                 //                Log.e("DataUtils", "55 element1: "+element1.toString());
@@ -306,7 +306,7 @@ public class DataUtils {
             int size = list.size();
             for (int i = 0; i < size; i++) {
                 JSONObject data = list.getJSONObject(i);
-                SongBean bean = new SongBean(null, null, data.getString("songname"), null);
+                SongBean bean = new SongBean(null, null, data.getString("songname"), data.getString("songmid"));
                 beans.add(bean);
             }
             Log.e("DataUtils", "3333");
@@ -383,14 +383,43 @@ public class DataUtils {
             String location = trackList.getString("location");
             String result = parseXianiSongUrl(location);
             //            FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory().getPath() + "/jsondata.json");
-//            fos.write(string.getBytes());
-//            fos.flush();
-//            fos.close();
+            //            fos.write(string.getBytes());
+            //            fos.flush();
+            //            fos.close();
             Log.e("DataUtils", "getWangyiSongListData Song result: " + result);
             return null;
         } catch (Exception e) {
             e.printStackTrace();
             Log.e("DataUtils", "getWangyiSongListData 55: " + e.toString());
+            return null;
+        }
+    }
+
+    public static ArrayList<SongBean> getQQSongData(String hrefId) {
+        Request request = new Request.Builder()
+                .url("http://base.music.qq.com/fcgi-bin/fcg_musicexpress.fcg?json=3&guid=780782017&g_tk=938407465&loginUin=0&hostUin=0&format=jsonp&inCharset=GB2312&outCharset=GB2312&notice=0&platform=yqq&jsonpCallback=jsonCallback&needNewCode=0")
+                .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Listen1/1.2.0 Chrome/49.0.2623.75 Electron/1.0.1 Safari/537.36")
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .build();
+        Log.e("DataUtils", "getQQSongData 11");
+        try {
+            Log.e("DataUtils", "getQQSongData 22");
+            Response response = new OkHttpClient().newCall(request).execute();
+            String string = response.body().string();
+            string = string.substring(13, string.length() - 2);
+            String key = JSON.parseObject(string).getString("key");
+            Log.e("DataUtils", "getQQSongData 33: "+"http://cc.stream.qqmusic.qq.com/C200"+hrefId+".m4a?vkey="+key+"&fromtag=0&guid=780782017");
+//            Request requestMp3 = new Request.Builder()
+//                    .url("http://cc.stream.qqmusic.qq.com/C200"+hrefId+".m4a?vkey="+key+"&fromtag=0&guid=780782017")
+//                    .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Listen1/1.2.0 Chrome/49.0.2623.75 Electron/1.0.1 Safari/537.36")
+//                    .addHeader("Content-Type", "application/x-www-form-urlencoded")
+//                    .build();
+//            Response responseMp3 = new OkHttpClient().newCall(requestMp3).execute();
+
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("DataUtils", "getQQSongData 55: " + e.toString());
             return null;
         }
     }
