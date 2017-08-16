@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ccl.ccltools.R;
@@ -40,7 +41,7 @@ public class SongListDataAdapter extends RecyclerView.Adapter<SongListDataAdapte
         SongBean bean = mDatas.get(position);
         holder.index.setText((position+1)+"");
         holder.title.setText(bean.songName);
-        holder.title.setTag(R.id.songdata_tag, bean.songId);
+        holder.rootViwe.setTag(R.id.songdata_tag, bean);
     }
 
     @Override
@@ -59,13 +60,18 @@ public class SongListDataAdapter extends RecyclerView.Adapter<SongListDataAdapte
     {
         TextView index;
         TextView title;
+        ImageView more;
+        View rootViwe;
 
         public MyViewHolder(View view)
         {
             super(view);
+            rootViwe = view;
             title = (TextView) view.findViewById(R.id.tv_songlist_data_title);
             index = (TextView) view.findViewById(R.id.tv_songlist_data_index);
-            title.setOnClickListener(mOnClickListener);
+            more = (ImageView) view.findViewById(R.id.iv_songlost_more);
+            rootViwe.setOnClickListener(mOnClickListener);
+            more.setOnClickListener(mOnClickListener);
         }
 
     }
@@ -73,13 +79,20 @@ public class SongListDataAdapter extends RecyclerView.Adapter<SongListDataAdapte
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            final String tag = (String) v.getTag(R.id.songdata_tag);
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    DataUtils.getSongData(AusleseSongListFragment.mCurrentDataType, tag);
-                }
-            }).start();
+            switch (v.getId()){
+                case R.id.rl_songlist_item_view:
+                    final SongBean tag = (SongBean) v.getTag(R.id.songdata_tag);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            DataUtils.getSongData(AusleseSongListFragment.mCurrentDataType, tag.songId);
+                        }
+                    }).start();
+                    break;
+                case R.id.iv_songlost_more:
+//                    v.getParent()
+                    break;
+            }
         }
     };
 }
