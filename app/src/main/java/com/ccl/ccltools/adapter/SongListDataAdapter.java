@@ -40,7 +40,8 @@ public class SongListDataAdapter extends RecyclerView.Adapter<SongListDataAdapte
     public void onBindViewHolder(MyViewHolder holder, int position) {
         SongBean bean = mDatas.get(position);
         holder.index.setText((position+1)+"");
-        holder.title.setText(bean.songName);
+        holder.song.setText(bean.songName);
+        holder.singer.setText(bean.singerName);
         holder.rootViwe.setTag(R.id.songdata_tag, bean);
     }
 
@@ -59,7 +60,8 @@ public class SongListDataAdapter extends RecyclerView.Adapter<SongListDataAdapte
     class MyViewHolder extends RecyclerView.ViewHolder
     {
         TextView index;
-        TextView title;
+        TextView song;
+        TextView singer;
         ImageView more;
         View rootViwe;
 
@@ -67,8 +69,9 @@ public class SongListDataAdapter extends RecyclerView.Adapter<SongListDataAdapte
         {
             super(view);
             rootViwe = view;
-            title = (TextView) view.findViewById(R.id.tv_songlist_data_title);
+            song = (TextView) view.findViewById(R.id.tv_songlist_data_song);
             index = (TextView) view.findViewById(R.id.tv_songlist_data_index);
+            singer = (TextView) view.findViewById(R.id.tv_songlist_data_singer);
             more = (ImageView) view.findViewById(R.id.iv_songlost_more);
             rootViwe.setOnClickListener(mOnClickListener);
             more.setOnClickListener(mOnClickListener);

@@ -4,4 +4,10 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorAccentPress">#FF6081</color>
+    <color name="colorControlHighlight">#55BBBBBB</color>
+
+
+    <color name="TranspRarent">#00000000</color>
+    <color name="Normalpress">#55BBBBBB</color>
+    <color name="DarkGray">#33CCCCCC</color>
 </resources>

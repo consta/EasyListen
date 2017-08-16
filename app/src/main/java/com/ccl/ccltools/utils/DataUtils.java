@@ -217,15 +217,18 @@ public class DataUtils {
             Response response = new OkHttpClient().newCall(request).execute();
             String string = response.body().string();
             Document html = Jsoup.parse(string);
-            Elements elementsByTag = html.getElementsByClass("f-hide");
+            Element jsonElement = html.getElementById("song-list-pre-cache").getElementsByTag("textarea").get(0);
+            JSONArray jsonArr = JSON.parseArray(jsonElement.ownText());
+            int size = jsonArr.size();
             ArrayList<SongBean> beans = new ArrayList<>();
-            for (Element tag : elementsByTag) {
-                Elements txt = tag.getElementsByTag("a");
-                for (Element data : txt) {
-                    String title = data.ownText();
-                    String href = data.attr("href");
-                    beans.add(new SongBean(null, null, title, href.split("id=")[1]));
-                }
+            for (int i = 0; i <size; i++) {
+                JSONObject jsonObject = jsonArr.getJSONObject(i);
+                String songName = jsonObject.getString("name");
+                String songId = jsonObject.getInteger("id")+"";
+                JSONObject artists = jsonObject.getJSONArray("artists").getJSONObject(0);
+                String singerName = artists.getString("name");
+                String singerId = artists.getInteger("id")+"";
+                beans.add(new SongBean(singerName, singerId, songName, songId));
             }
             Log.e("beans", "beans: " + beans.size());
             return beans;
@@ -408,13 +411,13 @@ public class DataUtils {
             String string = response.body().string();
             string = string.substring(13, string.length() - 2);
             String key = JSON.parseObject(string).getString("key");
-            Log.e("DataUtils", "getQQSongData 33: "+"http://cc.stream.qqmusic.qq.com/C200"+hrefId+".m4a?vkey="+key+"&fromtag=0&guid=780782017");
-//            Request requestMp3 = new Request.Builder()
-//                    .url("http://cc.stream.qqmusic.qq.com/C200"+hrefId+".m4a?vkey="+key+"&fromtag=0&guid=780782017")
-//                    .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Listen1/1.2.0 Chrome/49.0.2623.75 Electron/1.0.1 Safari/537.36")
-//                    .addHeader("Content-Type", "application/x-www-form-urlencoded")
-//                    .build();
-//            Response responseMp3 = new OkHttpClient().newCall(requestMp3).execute();
+            Log.e("DataUtils", "getQQSongData 33: " + "http://cc.stream.qqmusic.qq.com/C200" + hrefId + ".m4a?vkey=" + key + "&fromtag=0&guid=780782017");
+            //            Request requestMp3 = new Request.Builder()
+            //                    .url("http://cc.stream.qqmusic.qq.com/C200"+hrefId+".m4a?vkey="+key+"&fromtag=0&guid=780782017")
+            //                    .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Listen1/1.2.0 Chrome/49.0.2623.75 Electron/1.0.1 Safari/537.36")
+            //                    .addHeader("Content-Type", "application/x-www-form-urlencoded")
+            //                    .build();
+            //            Response responseMp3 = new OkHttpClient().newCall(requestMp3).execute();
 
             return null;
         } catch (Exception e) {
