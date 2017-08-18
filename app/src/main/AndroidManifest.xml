@@ -25,6 +25,7 @@
             </intent-filter>
         </activity>
         <activity
+            android:theme="@style/AppTheme"
             android:name=".SongListActivity"
             android:label="@string/title_activity_song_list"></activity>
     </application>

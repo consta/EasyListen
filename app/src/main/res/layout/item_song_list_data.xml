@@ -1,61 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-    <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/rl_songlist_item_view"
-        android:layout_width="match_parent"
+<RelativeLayout
+    android:id="@+id/rl_songlist_item_view"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@drawable/select_normal_feedback"
+    android:layout_height="48dp">
+
+    <TextView
+        android:id="@+id/tv_songlist_data_index"
+        android:layout_width="56dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textColor="#88777777"
+        android:textSize="16sp"/>
+
+    <ImageView
+        android:id="@+id/iv_songlost_more"
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
         android:background="@drawable/select_normal_feedback"
-        android:layout_height="48dp">
-
-        <TextView
-            android:id="@+id/tv_songlist_data_index"
-            android:layout_width="56dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textColor="#88777777"
-            android:textSize="16sp"/>
-
-        <ImageView
-            android:id="@+id/iv_songlost_more"
-            android:layout_width="48dp"
-            android:clickable="true"
-            android:background="@drawable/select_normal_feedback"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:padding="16dp"
-            android:src="@mipmap/icon_more_vert"/>
+        android:clickable="true"
+        android:padding="16dp"
+        android:src="@mipmap/icon_more_vert"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_toLeftOf="@id/iv_songlost_more"
-        android:orientation="vertical"
-        android:layout_toRightOf="@id/tv_songlist_data_index">
+        android:layout_toRightOf="@id/tv_songlist_data_index"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/tv_songlist_data_song"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
             android:layout_weight="3"
-            android:textColor="#555555"
+            android:gravity="center_vertical"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:textColor="#333333"
             android:textSize="14sp"/>
 
         <TextView
             android:id="@+id/tv_songlist_data_singer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
             android:layout_weight="2"
-            android:textColor="#555555"
-            android:textSize="12sp"/>
+            android:maxLines="1"
+            android:gravity="center_vertical"
+            android:textColor="#777777"
+            android:textSize="10sp"/>
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
-        android:layout_toRightOf="@id/tv_songlist_data_index"
+        android:layout_height="0.5dp"
         android:layout_alignParentBottom="true"
-        android:background="#66AAAAAA"
-        android:layout_height="0.5dp"></View>
+        android:layout_toRightOf="@id/tv_songlist_data_index"
+        android:background="#66AAAAAA"></View>
 
-    </RelativeLayout>
+</RelativeLayout>
