@@ -12,14 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.ccl.ccltools.MainActivity;
 import com.ccl.ccltools.R;
-import com.ccl.ccltools.SongListActivity;
+import com.ccl.ccltools.activity.SongListActivity;
 import com.ccl.ccltools.adapter.AusleseSongListAdapter;
 import com.ccl.ccltools.asynctask.AusleseSongListTask;
 import com.ccl.ccltools.bean.AusleseSongListBean;
 import com.ccl.ccltools.utils.DataUtils;
-import com.ccl.ccltools.utils.UIUtils;
 import com.github.clans.fab.FloatingActionMenu;
 
 public class AusleseSongListFragment extends BaseFragment {

@@ -1,5 +1,6 @@
 package com.ccl.ccltools.utils;
 
+import android.util.Base64;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
@@ -218,16 +219,19 @@ public class DataUtils {
             String string = response.body().string();
             Document html = Jsoup.parse(string);
             Element jsonElement = html.getElementById("song-list-pre-cache").getElementsByTag("textarea").get(0);
-            JSONArray jsonArr = JSON.parseArray(jsonElement.ownText());
+            byte[] decode = Base64.decode(jsonElement.ownText(), Base64.DEFAULT);
+            String sU8 = new String(decode, "UTF-8");
+            String sGBK = new String(decode, "GBK");
+            JSONArray jsonArr = JSON.parseArray(sU8);
             int size = jsonArr.size();
             ArrayList<SongBean> beans = new ArrayList<>();
-            for (int i = 0; i <size; i++) {
+            for (int i = 0; i < size; i++) {
                 JSONObject jsonObject = jsonArr.getJSONObject(i);
                 String songName = jsonObject.getString("name");
-                String songId = jsonObject.getInteger("id")+"";
+                String songId = jsonObject.getInteger("id") + "";
                 JSONObject artists = jsonObject.getJSONArray("artists").getJSONObject(0);
                 String singerName = artists.getString("name");
-                String singerId = artists.getInteger("id")+"";
+                String singerId = artists.getInteger("id") + "";
                 beans.add(new SongBean(singerName, singerId, songName, songId));
             }
             Log.e("beans", "beans: " + beans.size());

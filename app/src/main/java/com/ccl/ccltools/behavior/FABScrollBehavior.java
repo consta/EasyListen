@@ -5,7 +5,6 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -50,9 +49,9 @@ public class FABScrollBehavior extends CoordinatorLayout.Behavior<FloatingAction
                 Log.e("onNestedScroll", "height: " + height);
                 mChildY = height - mChildY;
                 mHideSet.playTogether(ObjectAnimator.ofFloat(child, "translationY", mChildY),
-                        ObjectAnimator.ofFloat(child, "scaleX", 0),
+//                        ObjectAnimator.ofFloat(child, "scaleX", 0),
                         ObjectAnimator.ofFloat(child, "scaleY", 0));
-                mHideSet.setDuration(200);
+                mHideSet.setDuration(500);
             }
             mHideSet.start();
         } else if (dyConsumed < -2 && mCurrentState == STATE_HIDE) {
@@ -62,13 +61,14 @@ public class FABScrollBehavior extends CoordinatorLayout.Behavior<FloatingAction
                 mShowSet = new AnimatorSet();
                 Log.e("onNestedScroll", "mChildY: " + mChildY);
                 mShowSet.playTogether(ObjectAnimator.ofFloat(child, "translationY", 0),
-                        ObjectAnimator.ofFloat(child, "scaleX", 1),
+//                        ObjectAnimator.ofFloat(child, "scaleX", 1),
                         ObjectAnimator.ofFloat(child, "scaleY", 1));
 
-                mShowSet.setDuration(200);
+                mShowSet.setDuration(500);
             }
             mShowSet.start();
         }
+
     }
 
 }

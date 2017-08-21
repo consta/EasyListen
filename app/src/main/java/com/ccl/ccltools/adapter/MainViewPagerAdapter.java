@@ -9,7 +9,7 @@ import java.util.List;
 
 public class MainViewPagerAdapter extends FragmentPagerAdapter {
     private List<Fragment> mFragments;
-    private String[] mTabNames = new String[]{"精选歌单", "我的收藏"};
+    private String[] mTabNames = new String[]{"歌单", "我的"};
 
     public MainViewPagerAdapter(FragmentManager fm, List<Fragment> fragments) {
         super(fm);

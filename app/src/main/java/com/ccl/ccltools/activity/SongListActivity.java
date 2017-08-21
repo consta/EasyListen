@@ -1,10 +1,8 @@
-package com.ccl.ccltools;
+package com.ccl.ccltools.activity;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -12,12 +10,13 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ccl.ccltools.R;
 import com.ccl.ccltools.adapter.SongListDataAdapter;
 import com.ccl.ccltools.asynctask.SongListDataTask;
 import com.ccl.ccltools.fragment.AusleseSongListFragment;
 import com.ccl.ccltools.other.GlideApp;
 
-public class SongListActivity extends AppCompatActivity {
+public class SongListActivity extends BaseActivity {
 
     private ActionBar mSupportActionBar;
     private ImageView mIvTop;
@@ -32,36 +31,34 @@ public class SongListActivity extends AppCompatActivity {
     private static final int BAR_STATE_COLLAPSED = 1;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //内容共享
-//        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
-//        if (Build.VERSION.SDK_INT >= 21) {
-//            View decorView = getWindow().getDecorView();
-//            int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-//                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-//            decorView.setSystemUiVisibility(option);
-//            getWindow().setStatusBarColor(Color.TRANSPARENT);
-//        }
-        setContentView(R.layout.activity_song_list);
+    protected int getAppLayoutId() {
+        return R.layout.applayout_songlist;
+    }
+
+    @Override
+    protected int getContentId() {
+        return R.layout.content_song_list;
+    }
+
+    @Override
+    protected void init() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.songlist_toolbar);
         setSupportActionBar(toolbar);
         mSupportActionBar = getSupportActionBar();
         mSupportActionBar.setDisplayHomeAsUpEnabled(true);
         mSupportActionBar.setTitle("歌单");
-        initView();
-        initData();
-        initListener();
     }
 
-    private void initView() {
+    @Override
+    protected void initView() {
         mIvTop = (ImageView) findViewById(R.id.iv_songlist_top);
         mTvTitle = (TextView) findViewById(R.id.tv_songlist_title);
         mAppBatLayout = (AppBarLayout) findViewById(R.id.songlist_app_bar);
         mRecyclerView = (RecyclerView) findViewById(R.id.recuclerview_songlist_data);
     }
 
-    private void initData() {
+    @Override
+    protected void initData() {
         Intent intent = getIntent();
         mTitle = intent.getStringExtra("title");
         String img = intent.getStringExtra("img");
@@ -76,7 +73,8 @@ public class SongListActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter);
     }
 
-    private void initListener() {
+    @Override
+    protected void initListener() {
         mAppBatLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
