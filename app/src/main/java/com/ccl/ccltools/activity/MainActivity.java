@@ -1,20 +1,19 @@
-package com.ccl.ccltools;
+package com.ccl.ccltools.activity;
 
-import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.ccl.ccltools.R;
 import com.ccl.ccltools.adapter.MainViewPagerAdapter;
 import com.ccl.ccltools.fragment.AusleseSongListFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
@@ -22,20 +21,23 @@ public class MainActivity extends AppCompatActivity {
     private MainViewPagerAdapter mViewPagerAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        initView();
-        initData();
-        initListener();
+    protected int getAppLayoutId() {
+        return R.layout.applayout_main;
     }
 
-    public void initView() {
+    @Override
+    protected int getContentId() {
+        return R.layout.content_layout_main;
+    }
+
+    @Override
+    protected void initView() {
         mTabLayout = (TabLayout) findViewById(R.id.main_tablayout);
         mViewPager = (ViewPager) findViewById(R.id.main_viewpager);
     }
 
-    public void initData() {
+    @Override
+    protected void initData() {
         mFragments = new ArrayList<>();
         mFragments.add(new AusleseSongListFragment());
         mFragments.add(new AusleseSongListFragment());
@@ -45,7 +47,8 @@ public class MainActivity extends AppCompatActivity {
         mTabLayout.setupWithViewPager(mViewPager);
     }
 
-    public void initListener() {
+    @Override
+    protected void initListener() {
 
     }
 
