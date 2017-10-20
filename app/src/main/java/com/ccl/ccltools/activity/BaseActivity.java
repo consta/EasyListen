@@ -46,8 +46,6 @@ public abstract class BaseActivity extends AppCompatActivity {
             mRootView.addView(appLayout, 0);
             initAppLayout();
         }
-//        mContentContainer = (LinearLayout) LayoutInflater.from(getBaseContext()).inflate(R.layout.content_layout_base, mRootView, false);
-//        mRootView.addView(mContentContainer);
         mContentContainer = (LinearLayout) findViewById(R.id.ll_content);
         mContentView = getContentView();
         if (mContentView != null) {

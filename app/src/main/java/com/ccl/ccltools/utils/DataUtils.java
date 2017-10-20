@@ -1,6 +1,5 @@
 package com.ccl.ccltools.utils;
 
-import android.util.Base64;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
@@ -32,9 +31,6 @@ public class DataUtils {
     public static final int DATA_WANGYI = 0;
     public static final int DATA_XIAMI = 1;
     public static final int DATA_QQ = 2;
-    public static String pubKey = "010001";
-    public static String nonce = "0CoJUm6Qyw8W8jud";
-    public static String modulus = "00e0b509f6259df8642dbc35662901477df22677ec152b5ff68ace615bb7b725152b3ab17a876aea8a5aa76d2e417629ec4ee341f56135fccf695280104e0312ecbda92557c93870114af6c9d05c4f7f0c3685b7a46bee255932575cce10b424d813cfe4875d3e82047b97ddef52741d546b8e289dc6935b3ece0462db0a22b8e7";
 
     public static ArrayList<AusleseSongListBean> getSongList(int type, int offset) {
         ArrayList<AusleseSongListBean> data = null;
@@ -106,7 +102,7 @@ public class DataUtils {
                     img = img.substring(0, img.indexOf("?")) + "?param=280y280";
                     Elements a = data.getElementsByTag("a");
                     String title = a.attr("title");
-                    String href = a.attr("href");
+                    String href = a.attr("href").split("=")[1];
                     Log.e("tag", "tag: " + a.toString());
                     beans.add(new AusleseSongListBean(title, img, href));
                 }
@@ -209,7 +205,7 @@ public class DataUtils {
 
     public static ArrayList<SongBean> getWangyiSongListData(String hrefId) {
         Request request = new Request.Builder()
-                .url("http://music.163.com" + hrefId)
+                .url("http://music.163.com/api/playlist/detail?id=" + hrefId)
                 .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Listen1/1.2.0 Chrome/49.0.2623.75 Electron/1.0.1 Safari/537.36")
                 .build();
         Log.e("DataUtils", "getWangyiSongListData 11");
@@ -217,12 +213,7 @@ public class DataUtils {
             Log.e("DataUtils", "getWangyiSongListData 22");
             Response response = new OkHttpClient().newCall(request).execute();
             String string = response.body().string();
-            Document html = Jsoup.parse(string);
-            Element jsonElement = html.getElementById("song-list-pre-cache").getElementsByTag("textarea").get(0);
-            byte[] decode = Base64.decode(jsonElement.ownText(), Base64.DEFAULT);
-            String sU8 = new String(decode, "UTF-8");
-            String sGBK = new String(decode, "GBK");
-            JSONArray jsonArr = JSON.parseArray(sU8);
+            JSONArray jsonArr = JSON.parseObject(string).getJSONObject("result").getJSONArray("tracks");
             int size = jsonArr.size();
             ArrayList<SongBean> beans = new ArrayList<>();
             for (int i = 0; i < size; i++) {
