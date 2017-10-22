@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ccl.ccltools.bean.AusleseSongListBean;
+import com.ccl.ccltools.bean.Singer;
 import com.ccl.ccltools.bean.SongBean;
 
 import org.jsoup.Jsoup;
@@ -15,6 +16,7 @@ import org.jsoup.select.Elements;
 
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.FormBody;
 import okhttp3.Headers;
@@ -138,7 +140,7 @@ public class DataUtils {
                     String img = tag.getElementsByTag("img").attr("src");
                     img = img.substring(0, img.indexOf("@"));
                     String title = tag.attr("title");
-                    String href = tag.attr("href");
+                    String href = tag.attr("href").split("/collect/")[1];
                     Log.e("tag", "tag: " + tag.toString());
                     beans.add(new AusleseSongListBean(title, img, href));
                 }
@@ -190,6 +192,7 @@ public class DataUtils {
             int size = list.size();
             for (int i = 0; i < size; i++) {
                 JSONObject data = list.getJSONObject(i);
+                Log.e("DataUtils", "data: "+data.toString());
                 AusleseSongListBean bean = new AusleseSongListBean(data.getString("dissname"), data.getString("imgurl"), data.getString("dissid"));
                 beans.add(bean);
             }
@@ -213,6 +216,10 @@ public class DataUtils {
             Log.e("DataUtils", "getWangyiSongListData 22");
             Response response = new OkHttpClient().newCall(request).execute();
             String string = response.body().string();
+//            FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory().getPath()+"/neteaseList.json");
+//            fos.write(string.getBytes());
+//            fos.flush();
+//            fos.close();
             JSONArray jsonArr = JSON.parseObject(string).getJSONObject("result").getJSONArray("tracks");
             int size = jsonArr.size();
             ArrayList<SongBean> beans = new ArrayList<>();
@@ -237,7 +244,7 @@ public class DataUtils {
     public static ArrayList<SongBean> getXiamiSongListData(String hrefId) {
         Request request = new Request.Builder()
                 //                .url("http://api.xiami.com/web?v=2.0&app_key=1&id="+hrefId+"&callback=jsonp122&r=collect/detail")
-                .url("http://www.xiami.com" + hrefId)
+                .url("http://www.xiami.com/collect/" + hrefId)
                 .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Listen1/1.2.0 Chrome/49.0.2623.75 Electron/1.0.1 Safari/537.36")
                 //                .addHeader("Cookie", "_unsign_token=952150b1a1fc5bf061e45a813535d019; _xiamitoken=b0e08dc541ac1dc0b85ed7f85ea7e119")
                 .build();
@@ -295,15 +302,28 @@ public class DataUtils {
             string = string.substring(13, dataLen - 1);
             Log.e("DataUtils", "2222 request: " + string);
             ArrayList<SongBean> beans = new ArrayList<>();
-            //            FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory().getPath()+"/jsondata.json");
-            //            fos.write(string.getBytes());
-            //            fos.flush();
-            //            fos.close();
+//                        FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory().getPath()+"/qqList.json");
+//                        fos.write(string.getBytes());
+//                        fos.flush();
+//                        fos.close();
             JSONObject jsonObject = JSON.parseObject(string);
             JSONArray list = jsonObject.getJSONArray("cdlist").getJSONObject(0).getJSONArray("songlist");
             int size = list.size();
             for (int i = 0; i < size; i++) {
                 JSONObject data = list.getJSONObject(i);
+                JSONArray jsingers = data.getJSONArray("singer");
+                List<Singer> singers = null;
+                if(jsingers != null && jsingers.size() > 0){
+                    singers = new ArrayList<>();
+                    int size1 = jsingers.size();
+                    for (int j = 0; j < size1; j++) {
+                        Singer singer = new Singer();
+                        JSONObject jsonObject1 = jsingers.getJSONObject(j);
+                        singer.setId(jsonObject1.getString("id"));
+                        singer.setSingerName(jsonObject1.getString("name"));
+                        singers.add(singer);
+                    }
+                }
                 SongBean bean = new SongBean(null, null, data.getString("songname"), data.getString("songmid"));
                 beans.add(bean);
             }

@@ -16,7 +16,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     private CoordinatorLayout mRootView;
     private LinearLayout mContentContainer;
     private View mContentView;
-    private View mPlayView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,7 +62,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private View getContentView() {
         int appLayoutId = getContentId();
-        if (appLayoutId > 0) {
+        if (appLayoutId != 0) {
             return LayoutInflater.from(getBaseContext()).inflate(appLayoutId, mContentContainer, false);
         }
         return null;
