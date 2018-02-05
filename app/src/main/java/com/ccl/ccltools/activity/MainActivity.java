@@ -8,7 +8,7 @@ import android.view.MenuItem;
 
 import com.ccl.ccltools.R;
 import com.ccl.ccltools.adapter.MainViewPagerAdapter;
-import com.ccl.ccltools.fragment.AusleseSongListFragment;
+import com.ccl.ccltools.fragment.SongListFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +39,8 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initData() {
         mFragments = new ArrayList<>();
-        mFragments.add(new AusleseSongListFragment());
-        mFragments.add(new AusleseSongListFragment());
+        mFragments.add(new SongListFragment());
+        mFragments.add(new SongListFragment());
         mViewPagerAdapter = new MainViewPagerAdapter(getSupportFragmentManager(), mFragments);
         mViewPager.setAdapter(mViewPagerAdapter);
         mTabLayout.setTabMode(TabLayout.MODE_FIXED);

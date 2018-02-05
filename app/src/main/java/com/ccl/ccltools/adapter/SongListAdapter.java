@@ -11,36 +11,36 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ccl.ccltools.R;
-import com.ccl.ccltools.asynctask.AusleseSongListTask;
-import com.ccl.ccltools.bean.AusleseSongListBean;
-import com.ccl.ccltools.fragment.AusleseSongListFragment;
+import com.ccl.ccltools.asynctask.SongListTask;
+import com.ccl.ccltools.bean.SongList;
+import com.ccl.ccltools.fragment.SongListFragment;
 import com.ccl.ccltools.other.GlideApp;
 import com.ccl.ccltools.utils.UIUtils;
 
 import java.util.List;
 
 
-public class AusleseSongListAdapter extends RecyclerView.Adapter<AusleseSongListAdapter.MyViewHolder> {
+public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.MyViewHolder> {
 
     private Context mContext;
-    private List<AusleseSongListBean> mDatas;
+    private List<SongList> mDatas;
     private boolean mLoading = true;
     private int mItemHeight;
     private View.OnClickListener mOnItemClickListener;
 
-    public AusleseSongListAdapter(Context context) {
+    public SongListAdapter(Context context) {
         mContext = context;
         Resources resources = mContext.getResources();
         DisplayMetrics dm = resources.getDisplayMetrics();
         mItemHeight = dm.widthPixels / 2 - UIUtils.dp2px(12);
     }
 
-    public void setDatas(List<AusleseSongListBean> data) {
+    public void setDatas(List<SongList> data) {
         mDatas = data;
         mLoading = false;
     }
 
-    public void addDatas(List<AusleseSongListBean> data) {
+    public void addDatas(List<SongList> data) {
         if (mDatas != null) {
             mDatas.addAll(data);
         } else {
@@ -57,7 +57,7 @@ public class AusleseSongListAdapter extends RecyclerView.Adapter<AusleseSongList
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        AusleseSongListBean ausleseSongListBean = mDatas.get(position);
+        SongList ausleseSongListBean = mDatas.get(position);
         holder.title.setText(ausleseSongListBean.title);
         holder.img.setTag(R.id.songlist_img_tag, ausleseSongListBean);
         GlideApp.with(mContext)
@@ -67,7 +67,7 @@ public class AusleseSongListAdapter extends RecyclerView.Adapter<AusleseSongList
 
         if (!mLoading && position >= mDatas.size() - 10) {
             mLoading = true;
-            new AusleseSongListTask(this, mContext, null).execute(AusleseSongListFragment.mCurrentDataType);
+            new SongListTask(this, mContext, null).execute(SongListFragment.mCurrentDataType);
         }
     }
 

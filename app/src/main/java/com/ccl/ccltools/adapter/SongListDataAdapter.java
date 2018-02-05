@@ -9,8 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ccl.ccltools.R;
-import com.ccl.ccltools.bean.SongBean;
-import com.ccl.ccltools.fragment.AusleseSongListFragment;
+import com.ccl.ccltools.activity.SongListActivity;
+import com.ccl.ccltools.bean.ListSong;
+import com.ccl.ccltools.fragment.SongListFragment;
 import com.ccl.ccltools.utils.DataUtils;
 
 import java.util.List;
@@ -19,14 +20,14 @@ import java.util.List;
 public class SongListDataAdapter extends RecyclerView.Adapter<SongListDataAdapter.MyViewHolder> {
 
     private Context mContext;
-    private List<SongBean> mDatas;
+    private List<ListSong> mDatas;
     private View.OnClickListener mOnItemClickListener;
 
     public SongListDataAdapter(Context context) {
         mContext = context;
     }
 
-    public void setDatas(List<SongBean> data){
+    public void setDatas(List<ListSong> data) {
         mDatas = data;
     }
 
@@ -38,8 +39,8 @@ public class SongListDataAdapter extends RecyclerView.Adapter<SongListDataAdapte
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        SongBean bean = mDatas.get(position);
-        holder.index.setText((position+1)+"");
+        ListSong bean = mDatas.get(position);
+        holder.index.setText((position + 1) + "");
         holder.song.setText(bean.songName);
         holder.singer.setText(bean.singerName);
         holder.rootViwe.setTag(R.id.songdata_tag, bean);
@@ -47,26 +48,24 @@ public class SongListDataAdapter extends RecyclerView.Adapter<SongListDataAdapte
 
     @Override
     public int getItemCount() {
-        if(mDatas != null){
+        if (mDatas != null) {
             return mDatas.size();
         }
         return 0;
     }
 
-    public void setOnItemClickListener(View.OnClickListener l){
+    public void setOnItemClickListener(View.OnClickListener l) {
         mOnItemClickListener = l;
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder
-    {
+    class MyViewHolder extends RecyclerView.ViewHolder {
         TextView index;
         TextView song;
         TextView singer;
         ImageView more;
         View rootViwe;
 
-        public MyViewHolder(View view)
-        {
+        public MyViewHolder(View view) {
             super(view);
             rootViwe = view;
             song = (TextView) view.findViewById(R.id.tv_songlist_data_song);
@@ -82,18 +81,19 @@ public class SongListDataAdapter extends RecyclerView.Adapter<SongListDataAdapte
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch (v.getId()){
+            switch (v.getId()) {
                 case R.id.rl_songlist_item_view:
-                    final SongBean tag = (SongBean) v.getTag(R.id.songdata_tag);
+                    final ListSong tag = (ListSong) v.getTag(R.id.songdata_tag);
+                    ((SongListActivity) mContext).mPlayView.setVisibility(View.VISIBLE);
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            DataUtils.getSongData(AusleseSongListFragment.mCurrentDataType, tag.songId);
+                            DataUtils.getSongData(SongListFragment.mCurrentDataType, tag.songId);
                         }
                     }).start();
                     break;
                 case R.id.iv_songlost_more:
-//                    v.getParent()
+                    //                    v.getParent()
                     break;
             }
         }

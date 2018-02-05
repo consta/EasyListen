@@ -14,16 +14,16 @@ import android.widget.ImageView;
 
 import com.ccl.ccltools.R;
 import com.ccl.ccltools.activity.SongListActivity;
-import com.ccl.ccltools.adapter.AusleseSongListAdapter;
-import com.ccl.ccltools.asynctask.AusleseSongListTask;
-import com.ccl.ccltools.bean.AusleseSongListBean;
+import com.ccl.ccltools.adapter.SongListAdapter;
+import com.ccl.ccltools.asynctask.SongListTask;
+import com.ccl.ccltools.bean.SongList;
 import com.ccl.ccltools.utils.DataUtils;
 import com.github.clans.fab.FloatingActionMenu;
 
-public class AusleseSongListFragment extends BaseFragment {
+public class SongListFragment extends BaseFragment {
 
     private RecyclerView mRecyclerView;
-    private AusleseSongListAdapter mAdapter;
+    private SongListAdapter mAdapter;
     private SwipeRefreshLayout mRefreshLayout;
     private GridLayoutManager mGridLayoutManager;
     private FloatingActionMenu mFabMenu;
@@ -52,7 +52,7 @@ public class AusleseSongListFragment extends BaseFragment {
     protected void initData() {
         mGridLayoutManager = new GridLayoutManager(getContext(), 2);
         mRecyclerView.setLayoutManager(mGridLayoutManager);
-        mAdapter = new AusleseSongListAdapter(getContext());
+        mAdapter = new SongListAdapter(getContext());
         mRecyclerView.setAdapter(mAdapter);
         mFabMenu.setClosedOnTouchOutside(true);
     }
@@ -86,8 +86,8 @@ public class AusleseSongListFragment extends BaseFragment {
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                AusleseSongListTask.LOAD_OFFSET = 0;
-                new AusleseSongListTask(mAdapter, AusleseSongListFragment.this.getContext(), mRefreshLayout).execute(mCurrentDataType);
+                SongListTask.LOAD_OFFSET = 0;
+                new SongListTask(mAdapter, SongListFragment.this.getContext(), mRefreshLayout).execute(mCurrentDataType);
             }
         });
 
@@ -111,7 +111,7 @@ public class AusleseSongListFragment extends BaseFragment {
                 mSongListToBack = true;
                 Intent intent = new Intent(getContext(), SongListActivity.class);
                 ImageView iv = (ImageView) ((ViewGroup) ((ViewGroup) v).getChildAt(0)).getChildAt(0);
-                AusleseSongListBean bean = (AusleseSongListBean) iv.getTag(R.id.songlist_img_tag);
+                SongList bean = (SongList) iv.getTag(R.id.songlist_img_tag);
                 intent.putExtra("img", bean.imgUrl);
                 intent.putExtra("href", bean.href);
                 intent.putExtra("title", bean.title);
@@ -138,7 +138,7 @@ public class AusleseSongListFragment extends BaseFragment {
 
     private void reGetData() {
         mRefreshLayout.setRefreshing(true);
-        AusleseSongListTask.LOAD_OFFSET = 0;
-        new AusleseSongListTask(mAdapter, this.getContext(), mRefreshLayout).execute(mCurrentDataType);
+        SongListTask.LOAD_OFFSET = 0;
+        new SongListTask(mAdapter, this.getContext(), mRefreshLayout).execute(mCurrentDataType);
     }
 }

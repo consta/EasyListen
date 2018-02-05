@@ -11,7 +11,6 @@ public class MyClass {
 
     public static void main(String[] args) {
         String s = creatScrectKey(16);
-
     }
 
     public static String creatScrectKey(int size) {

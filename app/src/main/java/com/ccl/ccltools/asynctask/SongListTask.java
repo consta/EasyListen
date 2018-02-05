@@ -5,26 +5,25 @@ import android.os.AsyncTask;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.widget.Toast;
 
-import com.ccl.ccltools.adapter.AusleseSongListAdapter;
-import com.ccl.ccltools.bean.AusleseSongListBean;
-import com.ccl.ccltools.fragment.AusleseSongListFragment;
-import com.ccl.ccltools.utils.DataUtils;
+import com.ccl.ccltools.adapter.SongListAdapter;
+import com.ccl.ccltools.bean.SongList;
+import com.ccl.ccltools.fragment.SongListFragment;
+import com.ccl.ccltools.platform.Platform;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by wang on 2017/8/6.
  */
 
-public class AusleseSongListTask extends AsyncTask<Integer, Void, List<AusleseSongListBean>> {
-    private AusleseSongListAdapter mAdapter;
+public class SongListTask extends AsyncTask<Integer, Void, List<SongList>> {
+    private SongListAdapter mAdapter;
     private Context mContext;
     private SwipeRefreshLayout mRefreshView;
     private int mCurrentDataType;
     public static int LOAD_OFFSET = 0;
 
-    public AusleseSongListTask(AusleseSongListAdapter adapter, Context context, SwipeRefreshLayout refreshView) {
+    public SongListTask(SongListAdapter adapter, Context context, SwipeRefreshLayout refreshView) {
         mAdapter = adapter;
         mContext = context;
         mRefreshView = refreshView;
@@ -36,18 +35,19 @@ public class AusleseSongListTask extends AsyncTask<Integer, Void, List<AusleseSo
     }
 
     @Override
-    protected List<AusleseSongListBean> doInBackground(Integer... params) {
+    protected List<SongList> doInBackground(Integer... params) {
         if (params != null && params.length > 0) {
             mCurrentDataType = params[0];
         }
-        ArrayList<AusleseSongListBean> ausleseSongList = DataUtils.getSongList(mCurrentDataType, LOAD_OFFSET);
-        return ausleseSongList;
+
+        List<SongList> songList = Platform.setPlatform(mCurrentDataType).getSonglist(LOAD_OFFSET);
+        return songList;
     }
 
     @Override
-    protected void onPostExecute(List<AusleseSongListBean> list) {
+    protected void onPostExecute(List<SongList> list) {
         super.onPostExecute(list);
-        if (mCurrentDataType == AusleseSongListFragment.mCurrentDataType) {
+        if (mCurrentDataType == SongListFragment.mCurrentDataType) {
 
             if (mRefreshView != null) {
                 mRefreshView.setRefreshing(false);

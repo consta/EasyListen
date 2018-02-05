@@ -6,12 +6,12 @@ import android.util.Log;
  * Created by wang on 2017/8/6.
  */
 
-public class AusleseSongListBean {
+public class SongList {
     public String title;
     public String imgUrl;
     public String href;
 
-    public AusleseSongListBean(String t, String i, String href){
+    public SongList(String t, String i, String href){
         title = t;
         imgUrl = i;
         this.href = href;

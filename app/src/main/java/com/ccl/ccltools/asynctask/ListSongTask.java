@@ -2,30 +2,25 @@ package com.ccl.ccltools.asynctask;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.ccl.ccltools.adapter.AusleseSongListAdapter;
 import com.ccl.ccltools.adapter.SongListDataAdapter;
-import com.ccl.ccltools.bean.AusleseSongListBean;
-import com.ccl.ccltools.bean.SongBean;
-import com.ccl.ccltools.utils.DataUtils;
+import com.ccl.ccltools.bean.ListSong;
+import com.ccl.ccltools.platform.Platform;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by wang on 2017/8/6.
  */
 
-public class SongListDataTask extends AsyncTask<Void, Void, List<SongBean>> {
+public class ListSongTask extends AsyncTask<Void, Void, List<ListSong>> {
     private SongListDataAdapter mAdapter;
     private Context mContext;
     private int mType;
     private String mHref;
 
-    public SongListDataTask(SongListDataAdapter adapter, Context context, int type, String href) {
+    public ListSongTask(SongListDataAdapter adapter, Context context, int type, String href) {
         mAdapter = adapter;
         mContext = context;
         mType = type;
@@ -38,13 +33,13 @@ public class SongListDataTask extends AsyncTask<Void, Void, List<SongBean>> {
     }
 
     @Override
-    protected List<SongBean> doInBackground(Void... params) {
-        ArrayList<SongBean> ausleseSongList = DataUtils.getSongListData(mType, mHref);
+    protected List<ListSong> doInBackground(Void... params) {
+        List<ListSong> ausleseSongList = Platform.setPlatform(mType).getListSong(mHref);
         return ausleseSongList;
     }
 
     @Override
-    protected void onPostExecute(List<SongBean> list) {
+    protected void onPostExecute(List<ListSong> list) {
         super.onPostExecute(list);
         if (list != null && list.size() > 0) {
             mAdapter.setDatas(list);

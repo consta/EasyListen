@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 import com.ccl.ccltools.R;
 import com.ccl.ccltools.adapter.SongListDataAdapter;
-import com.ccl.ccltools.asynctask.SongListDataTask;
-import com.ccl.ccltools.fragment.AusleseSongListFragment;
+import com.ccl.ccltools.asynctask.ListSongTask;
+import com.ccl.ccltools.fragment.SongListFragment;
 import com.ccl.ccltools.other.GlideApp;
 
 public class SongListActivity extends BaseActivity {
@@ -69,7 +69,8 @@ public class SongListActivity extends BaseActivity {
                 .into(mIvTop);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        mAdapter = new SongListDataAdapter(getApplicationContext());
+
+        mAdapter = new SongListDataAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -97,7 +98,7 @@ public class SongListActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        new SongListDataTask(mAdapter, getApplicationContext(), AusleseSongListFragment.mCurrentDataType, mHref).execute();
+        new ListSongTask(mAdapter, getApplicationContext(), SongListFragment.mCurrentDataType, mHref).execute();
     }
 
     @Override

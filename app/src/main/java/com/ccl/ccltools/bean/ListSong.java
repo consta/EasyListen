@@ -3,13 +3,13 @@ package com.ccl.ccltools.bean;
 
 import android.util.Log;
 
-public class SongBean {
+public class ListSong {
     public String singerName;
     public String singerId;
     public String songName;
     public String songId;
 
-    public SongBean(String singerName, String singerId, String songName, String songId) {
+    public ListSong(String singerName, String singerId, String songName, String songId) {
         this.singerName = singerName;
         this.singerId = singerId;
         this.songName = songName;

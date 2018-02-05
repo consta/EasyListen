@@ -16,12 +16,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     private CoordinatorLayout mRootView;
     private LinearLayout mContentContainer;
     private View mContentView;
+    public View mPlayView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mRootView = (CoordinatorLayout) View.inflate(getBaseContext(), R.layout.activity_base_layout, null);
-        setContentView(mRootView);
+        View view = View.inflate(getBaseContext(), R.layout.activity_base_layout, null);
+        mRootView = (CoordinatorLayout) (view.findViewById(R.id.root_view));
+        setContentView(view);
         initLayout();
         init();
         initView();
@@ -29,9 +31,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         initListener();
     }
 
-    protected void initAppLayout(){}
+    protected void initAppLayout() {
+    }
 
-    protected void init(){}
+    protected void init() {
+    }
 
     protected abstract void initView();
 
@@ -46,6 +50,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             initAppLayout();
         }
         mContentContainer = (LinearLayout) findViewById(R.id.ll_content);
+        mPlayView = findViewById(R.id.play_view);
         mContentView = getContentView();
         if (mContentView != null) {
             mContentContainer.addView(mContentView);
