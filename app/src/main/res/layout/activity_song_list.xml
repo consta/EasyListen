@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.ccl.ccltools.activity.SongListActivity">
+    tools:context="com.ccl.wang.activity.SongListActivity">
     <include layout="@layout/content_song_list" />
 
 </android.support.design.widget.CoordinatorLayout>
